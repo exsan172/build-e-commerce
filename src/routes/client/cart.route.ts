@@ -3,13 +3,38 @@
 */
 
 import express from "express"
-import Controllers from "../../controllers/notification.controller"
+import { query, body } from "express-validator"
+import Controllers from "../../controllers/cart.controller"
+import authToken from "../../middlewares/jwt.middleware"
 
 const router = express.Router()
 
-router.get("/cart", Controllers.getHelloWolrd)
-router.delete("/cart", Controllers.getHelloWolrd)
-router.post("/cart", Controllers.getHelloWolrd)
-router.put("/cart", Controllers.getHelloWolrd)
+router.get("/cart", authToken, Controllers.getCart)
+
+router.get("/cart-indicator", authToken, Controllers.countCart)
+
+router.delete("/cart", authToken, [
+
+    query("id")
+    .not().isEmpty().withMessage("id tidak boleh kosong")
+
+], Controllers.deleteCart)
+
+router.post("/cart", authToken, [
+
+    body("product")
+    .not().isEmpty().withMessage("Produk tidak boleh kosong")
+
+], Controllers.createCart)
+
+router.put("/cart", authToken, [
+
+    query("id")
+    .not().isEmpty().withMessage("id tidak boleh kosong"),
+
+    body("qty")
+    .not().isEmpty().withMessage("qyt tidak boleh kosong")
+
+], Controllers.updateCart)
 
 export default router

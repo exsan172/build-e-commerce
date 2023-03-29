@@ -1,17 +1,12 @@
 import mongoose from "mongoose";
 
-interface ImagesInterface {
-    name : string,
-    url  : string,
-    public_id : string
-}
-
 interface ProductInterface {
-    _id          : string,
-    product_name : string,
-    images       : Array<ImagesInterface>
-    price        : number,
-    qyt          : number
+    product     : object,
+    qty         : number,
+    total_price : number,
+    created_by  : string,
+    created_at  : Date,
+    updated_at  : Date | null
 }
 
 const orderSchema = new mongoose.Schema({
@@ -20,6 +15,15 @@ const orderSchema = new mongoose.Schema({
         require : true
     },
     total_price: {
+        type    : String,
+        require : true
+    },
+    order_status: {
+        type    : Boolean,
+        require : true,
+        default : false
+    },
+    created_by: {
         type    : String,
         require : true
     },

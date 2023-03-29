@@ -24,46 +24,42 @@ router.delete("/product", [
 ], authToken, validationMiddleware, Controllers.deleteProduct)
 
 
-router.put("/product", [
+router.put("/product", authToken, upload.single("images"), uploadMiddleware, fileError, [
 
     query("id")
     .not().isEmpty().withMessage("id tidak boleh kosong"),
 
     body("product_name")
-    .isEmpty().withMessage("product_name tidak boleh kosong"),
+    .not().isEmpty().withMessage("product_name tidak boleh kosong"),
 
     body("price")
-    .isEmpty().withMessage("price tidak boleh kosong"),
+    .not().isEmpty().withMessage("price tidak boleh kosong"),
 
     body("kinds")
     .not().isEmpty().withMessage("kinds tidak boleh kosong")
     .isIn(["food", "drink"]).withMessage("kinds harus food atau drink"),
 
     body("description")
-    .isEmpty().withMessage("description tidak boleh kosong")
+    .not().isEmpty().withMessage("description tidak boleh kosong")
 
-], authToken, validationMiddleware, Controllers.updateProduct)
+], validationMiddleware, Controllers.updateProduct)
 
 
-router.post("/product", [
+router.post("/product", authToken, upload.single("images"), uploadMiddleware, fileError, [
 
     body("product_name")
-    .isEmpty().withMessage("product_name tidak boleh kosong"),
+    .not().isEmpty().withMessage("product_name tidak boleh kosong"),
 
     body("price")
-    .isEmpty().withMessage("price tidak boleh kosong"),
+    .not().isEmpty().withMessage("price tidak boleh kosong"),
 
     body("kinds")
-    .custom((value) => {
-        console.log("value => ", value);
-        
-    })
     .not().isEmpty().withMessage("kinds tidak boleh kosong")
     .isIn(['food', 'drink']).withMessage("kinds harus food atau drink"),
 
     body("description")
-    .isEmpty().withMessage("description tidak boleh kosong")
+    .not().isEmpty().withMessage("description tidak boleh kosong")
 
-], authToken, upload.single("images"), uploadMiddleware, fileError, validationMiddleware, Controllers.createProduct)
+], validationMiddleware, Controllers.createProduct)
 
 export default router

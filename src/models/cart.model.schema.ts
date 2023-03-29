@@ -1,30 +1,25 @@
 import mongoose from "mongoose";
 
-interface ImagesInterface {
-    name : string,
-    url  : string,
-    public_id : string
-}
-
-interface ProductInterface {
-    _id          : string,
-    product_name : string,
-    images       : Array<ImagesInterface>
-    price        : number,
-    qyt          : number
-}
-
 const cartSchema = new mongoose.Schema({
     product: {
-        type    : Array<ProductInterface>,
+        type    : Object,
+        require : true
+    },
+    qty: {
+        type    : Number,
         require : true
     },
     total_price: {
+        type    : Number,
+        require : true
+    },
+    created_by: {
         type    : String,
         require : true
     },
     created_at: {
         type    : Date,
+        default : Date.now,
         require : true
     },
     updated_at: {

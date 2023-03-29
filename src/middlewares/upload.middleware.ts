@@ -27,10 +27,12 @@ export const upload = multer({
 
 export const uploadMiddleware = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        const result       = await cloudinary.uploader.upload(req.file.path)       
-        req.body.fileName  = result.original_filename
-        req.body.public_id = result.public_id
-        req.body.fileUrl   = result.secure_url
+        if(req.file !== undefined) {
+            const result       = await cloudinary.uploader.upload(req.file.path)       
+            req.body.fileName  = result.original_filename
+            req.body.public_id = result.public_id
+            req.body.fileUrl   = result.secure_url
+        }
         
         next()
     } catch (error) {

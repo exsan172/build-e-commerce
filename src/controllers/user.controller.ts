@@ -22,7 +22,8 @@ const userControllers = {
                 if(comparePassword) {
                     const sign = await signJwt({
                         name : findEmail.name,
-                        role : findEmail.role
+                        role : findEmail.role,
+                        id_user : findEmail._id
                     })
 
                     return config.response(res, 200, true, "sukses masuk", {
@@ -62,7 +63,8 @@ const userControllers = {
             if(regis) {
                 const sign = await signJwt({
                     name : req.body.name,
-                    role : req.body.role
+                    role : req.body.role,
+                    id_user : regis._id,
                 })
 
                 return config.response(res, 201, true, "sukses registrasi", {

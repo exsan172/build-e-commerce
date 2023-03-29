@@ -1,4 +1,5 @@
 import { Response, Request, NextFunction } from "express"
+import moment from "moment-timezone"
 import productService from "../services/product.service"
 import config from "../configs/index.config"
 import { deleteFile } from "../middlewares/upload.middleware"
@@ -76,10 +77,11 @@ const ProductController = {
                 product_name    : req.body.product_name,
                 price           : req.body.price,
                 description     : req.body.description,
-                kinds           : req.body.kinds
+                kinds           : req.body.kinds,
+                updated_at      : moment().tz("Asia/Jakarta")
             }
 
-            if(req.body.fileUrl !== null || req.body.fileUrl !== undefined) {
+            if(req.file !== undefined) {
                 if(await deleteFile(findData.images[0].public_id)) {
                     dataProduct["images"] = [
                         {
@@ -90,9 +92,11 @@ const ProductController = {
                     ]
                 }
             }
-
-            const update = await productService.updateProduct(req.query.id as string, dataProduct)
-            return config.response(res, 201, true, "sukses update produk", update)
+            
+            await productService.updateProduct(req.query.id as string, dataProduct)
+            const latestData = await productService.getOneProduct(req.query.id as string)
+            
+            return config.response(res, 201, true, "sukses update produk", latestData)
 
         } catch (error) {
             return config.response(res, 400, true, error.message)

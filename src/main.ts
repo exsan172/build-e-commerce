@@ -5,6 +5,7 @@
 import express from "express"
 import loger from "morgan"
 import cors from "cors"
+import bodyParser from "body-parser"
 import config from "./configs/index.config"
 
 // import router
@@ -23,8 +24,8 @@ app.use(cors({
     origin : [config.env.ALLOW_CORS || "*"]
 }))
 app.use(loger("common"))
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 // routes
 app.use("/api/client" ,ClientCart)

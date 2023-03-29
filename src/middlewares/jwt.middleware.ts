@@ -14,9 +14,9 @@ const authToken = async (req:Request, res:Response, next:NextFunction) => {
         return config.response(res, 401, false, "unauthorize")
     }
 
-    jwt.verify(token, config.env.PRIVATE_KEY, (err : any, user : any) => {
+    jwt.verify(token, config.env.PRIVATE_KEY, (err : any, data : any) => {
         if (err) return config.response(res, 401, false, "unauthorize")
-        req.body.user = ""
+        req.body.dataAuth = data
 
         next()
     })
