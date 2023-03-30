@@ -1,5 +1,4 @@
 import express from "express"
-import { query, body } from "express-validator"
 import Controllers from "../../controllers/order.controller"
 import validationMiddleware from "../../middlewares/validation.middleware"
 import authToken from "../../middlewares/jwt.middleware"
