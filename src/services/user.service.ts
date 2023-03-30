@@ -8,13 +8,13 @@ const userService = {
         return await userModelSchema.findOne(query)
     },
     deletetUser : async (id:string) => {
-        return await userModelSchema.deleteOne({ __id : id })
+        return await userModelSchema.deleteOne({ _id : id })
     },
     createUser : async (data:object) => {
         return await userModelSchema.create(data)
     },
     updateUser : async (id:string, data:object) => {
-        return await userModelSchema.updateOne({ __id: id }, data)
+        return await userModelSchema.updateOne({ _id: id }, data)
     }
 }
 

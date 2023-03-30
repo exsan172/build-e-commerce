@@ -1,11 +1,12 @@
 import admin from "firebase-admin"
+import * as firebaseConfig from "../configs/serviceAccountKey.json"
+
+admin.initializeApp({
+    credential  : admin.credential.cert(firebaseConfig as any)
+})
 
 const sendNotification = async (token:string, title:string, body:string) => {
-    try {
-        admin.initializeApp({
-            credential  : admin.credential.cert("../configs/serviceAccountKey.json")
-        })
-    
+    try {    
         const message = {
             notification: {
                 title: title,
@@ -21,6 +22,7 @@ const sendNotification = async (token:string, title:string, body:string) => {
         }
 
     } catch (error) {
+        console.log("error notif => ", error.message);
         
         return {
             status  : false,

@@ -44,11 +44,13 @@ const orderController = {
                         created_by  : req.body.dataAuth.id_user
                     })
                     
-                    await sendNotification(req.body.dataAuth.fcm_token, "Order berhasil di buat", "Order berhasil di buat, silahkan lakukan pembayaran di kasir")
-                    await notificationService.createNotification({
-                        message  : "Order berhasil di buat, silahkan lakukan pembayaran di kasir",
-                        for_user : req.body.dataAuth.id_user
-                    })
+                    const sendNotif = await sendNotification(req.body.dataAuth.fcm_token, "Order berhasil di buat", "Order berhasil di buat, silahkan lakukan pembayaran di kasir")
+                    if(sendNotif.status === true) {
+                        await notificationService.createNotification({
+                            message  : "Order berhasil di buat, silahkan lakukan pembayaran di kasir",
+                            for_user : req.body.dataAuth.id_user
+                        })
+                    }
 
                     return config.response(res, 200, true, "sukses membuat order baru", order)
                 }
@@ -107,19 +109,23 @@ const orderController = {
             const latestData = await orderService.getOneOrder(req.query.id as string)
             
             if(req.body.order_status !== undefined && latestData.order_status === true) {
-                await sendNotification(req.body.dataAuth.fcm_token, "Pesanan selesai", "Pesanan selesai, silahkan ambil di kasir")
-                await notificationService.createNotification({
-                    message  : "Pesanan selesai, silahkan ambil di kasir",
-                    for_user : latestData.created_by
-                })
+                const sendNotif = await sendNotification(req.body.dataAuth.fcm_token, "Pesanan selesai", "Pesanan selesai, silahkan ambil di kasir")
+                if(sendNotif.status === true) {
+                    await notificationService.createNotification({
+                        message  : "Pesanan selesai, silahkan ambil di kasir",
+                        for_user : latestData.created_by
+                    })
+                }
             }
 
             if(req.body.pay_status !== undefined && latestData.pay_status === true) {
-                await sendNotification(req.body.dataAuth.fcm_token, "Pembayaran di konfirmasi", "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda")
-                await notificationService.createNotification({
-                    message  : "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
-                    for_user : latestData.created_by
-                })
+                const sendNotif = await sendNotification(req.body.dataAuth.fcm_token, "Pembayaran di konfirmasi", "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda")
+                if(sendNotif.status === true) {
+                    await notificationService.createNotification({
+                        message  : "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
+                        for_user : latestData.created_by
+                    })
+                }
             }
 
             return config.response(res, 200, true, "sukses update data order", latestData)

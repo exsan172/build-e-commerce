@@ -20,21 +20,30 @@ const userControllers = {
             } else {
                 const comparePassword = bcrypt.compareSync(req.body.password, findEmail.password)
                 if(comparePassword) {
+                    
+                    if(req.body.fcm_token !== undefined && req.body.fcm_token !== "") {
+                        if(findEmail.fcm_token !== req.body.fcm_token) {
+                            await userService.updateUser(findEmail._id as any, {
+                                fcm_token : req.body.fcm_token
+                            })
+                        }
+                    }
+
+                    const latestDataUser = await userService.getOne({ email : req.body.email })
                     const sign = await signJwt({
-                        name : findEmail.name,
-                        role : findEmail.role,
-                        id_user : findEmail._id,
-                        fcm_token : findEmail.fcm_token
+                        name        : latestDataUser.name,
+                        role        : latestDataUser.role,
+                        id_user     : latestDataUser._id,
+                        fcm_token   : latestDataUser.fcm_token
                     })
 
                     return config.response(res, 200, true, "sukses masuk", {
                         token : sign,
-                        data  : findEmail
+                        data  : latestDataUser
                     })
 
                 }
             }
-
             
         } catch (error) {
             return config.response(res, 400, false, error.message)
