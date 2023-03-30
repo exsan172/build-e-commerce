@@ -23,7 +23,8 @@ const userControllers = {
                     const sign = await signJwt({
                         name : findEmail.name,
                         role : findEmail.role,
-                        id_user : findEmail._id
+                        id_user : findEmail._id,
+                        fcm_token : findEmail.fcm_token
                     })
 
                     return config.response(res, 200, true, "sukses masuk", {
@@ -65,6 +66,7 @@ const userControllers = {
                     name : req.body.name,
                     role : req.body.role,
                     id_user : regis._id,
+                    fcm_token : req.body.fcm_token
                 })
 
                 return config.response(res, 201, true, "sukses registrasi", {

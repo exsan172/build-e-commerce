@@ -1,17 +1,20 @@
 import admin from "firebase-admin"
 
-const sendNotificaiton = async (token:string, message:any) => {
-    await admin.initializeApp({
-        credential  : admin.credential.cert(""),
-        databaseURL : ""
-    })
-
+const sendNotification = async (token:string, title:string, body:string) => {
     try {
-        await admin.messaging().sendToDevice(token, message, {
-            priority    : "high",
-            timeToLive  : 60 * 60 * 24
+        admin.initializeApp({
+            credential  : admin.credential.cert("../configs/serviceAccountKey.json")
         })
-        
+    
+        const message = {
+            notification: {
+                title: title,
+                body: body,
+            },
+            token: token,
+        };
+
+        await admin.messaging().send(message)
         return {
             status  : true,
             message : "notifikasi berhasil di kirim." 
@@ -26,4 +29,4 @@ const sendNotificaiton = async (token:string, message:any) => {
     }
 }
 
-export default sendNotificaiton
+export default sendNotification
