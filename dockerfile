@@ -1,4 +1,4 @@
-FROM --platform=arm64 node:16.14.2
+FROM --platform=amd64 node:16.14.2
 WORKDIR /e-commerce
 COPY package*.json ./
 
