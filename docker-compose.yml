@@ -1,0 +1,30 @@
+version: '3'
+services:
+  web :
+    build :
+      context : .
+      dockerfile : dockerfile
+    ports :
+      - "3040:3000"
+    container_name: e-commerce
+    depends_on :
+      - db
+    networks :
+      - e-commerce-network
+    command : yarn start
+    
+  db :
+    image : mongo:latest
+    volumes :
+      - ./data/db:/data/db
+    container_name: mongoDB
+    ports :
+      - "27017:27017"
+    networks :
+      - e-commerce-network
+
+networks:
+  e-commerce-network:
+    driver : bridge
+    
+  
