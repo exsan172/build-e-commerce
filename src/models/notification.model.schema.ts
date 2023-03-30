@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const notificationSchema = new mongoose.Schema({
-    notification: {
+    message: {
         type    : String,
         require : true
     },
@@ -9,6 +9,10 @@ const notificationSchema = new mongoose.Schema({
         type    : Boolean,
         require : true,
         default : false
+    },
+    for_user : {
+        type    : String,
+        require : true
     },
     created_at: {
         type    : Date,

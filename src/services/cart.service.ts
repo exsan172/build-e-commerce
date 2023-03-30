@@ -10,6 +10,9 @@ const cartService = {
     deletetCart : async (id:string) => {
         return await cartModelSchema.deleteOne({ _id:id })
     },
+    deletetManyCart : async (id:Array<string>) => {
+        return await cartModelSchema.deleteMany({ _id:id })
+    },
     createCart : async (data:object) => {
         return await cartModelSchema.create(data)
     },

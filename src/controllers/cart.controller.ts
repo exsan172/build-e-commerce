@@ -1,4 +1,5 @@
 import { Response, Request, NextFunction } from "express"
+import moment from "moment-timezone"
 import cartService from "../services/cart.service"
 import productService from "../services/product.service"
 import config from "../configs/index.config"
@@ -80,7 +81,8 @@ const CartController = {
 
             await cartService.updateCart(req.query.id as string, {
                 qty : req.body.qty,
-                total_price : checkCart.product.price*req.body.qty
+                total_price : checkCart.product.price*req.body.qty,
+                update_at : moment().tz("Asia/Jakarta")
             })
 
             const latestData = await cartService.getOneCart(req.query.id as string)

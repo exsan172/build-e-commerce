@@ -5,7 +5,7 @@ const productService = {
         return await productModelSchema.find(query)
     },
     getOneProduct : async (id:string) => {
-        return await productModelSchema.findOne({ _id : id })
+        return await productModelSchema.findOne({ _id : id }).select("_id product_name images price description, kinds")
     },
     deletetProduct : async (id:string) => {
         return await productModelSchema.deleteOne({ _id : id })

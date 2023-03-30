@@ -1,11 +1,8 @@
-/*
-    routes file, edit this file to write your routes
-*/
-
 import express from "express"
 import { query, body } from "express-validator"
 import Controllers from "../../controllers/cart.controller"
 import authToken from "../../middlewares/jwt.middleware"
+import validationMiddleware from "../../middlewares/validation.middleware"
 
 const router = express.Router()
 
@@ -13,21 +10,21 @@ router.get("/cart", authToken, Controllers.getCart)
 
 router.get("/cart-indicator", authToken, Controllers.countCart)
 
-router.delete("/cart", authToken, [
+router.delete("/cart", [
 
     query("id")
     .not().isEmpty().withMessage("id tidak boleh kosong")
 
-], Controllers.deleteCart)
+], validationMiddleware, authToken, Controllers.deleteCart)
 
-router.post("/cart", authToken, [
+router.post("/cart", [
 
     body("product")
-    .not().isEmpty().withMessage("Produk tidak boleh kosong")
+    .notEmpty().withMessage("Produk tidak boleh kosong")
 
-], Controllers.createCart)
+], validationMiddleware, authToken, Controllers.createCart)
 
-router.put("/cart", authToken, [
+router.put("/cart", [
 
     query("id")
     .not().isEmpty().withMessage("id tidak boleh kosong"),
@@ -35,6 +32,6 @@ router.put("/cart", authToken, [
     body("qty")
     .not().isEmpty().withMessage("qyt tidak boleh kosong")
 
-], Controllers.updateCart)
+], validationMiddleware, authToken, Controllers.updateCart)
 
 export default router

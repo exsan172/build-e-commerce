@@ -4,9 +4,7 @@ interface ProductInterface {
     product     : object,
     qty         : number,
     total_price : number,
-    created_by  : string,
-    created_at  : Date,
-    updated_at  : Date | null
+    created_by  : string
 }
 
 const orderSchema = new mongoose.Schema({
@@ -15,8 +13,13 @@ const orderSchema = new mongoose.Schema({
         require : true
     },
     total_price: {
-        type    : String,
+        type    : Number,
         require : true
+    },
+    pay_status: {
+        type    : Boolean,
+        require : true,
+        default : false
     },
     order_status: {
         type    : Boolean,
@@ -29,7 +32,8 @@ const orderSchema = new mongoose.Schema({
     },
     created_at: {
         type    : Date,
-        require : true
+        require : true,
+        default : Date.now
     },
     updated_at: {
         type    : Date,

@@ -13,6 +13,7 @@ import ClientCart from "./routes/client/cart.route"
 import ClientNotification from "./routes/client/notification.route"
 import ClientProduct from "./routes/client/product.route"
 import ClientUser from "./routes/client/user.route"
+import ClientOrder from "./routes/client/order.route"
 
 import AdminProduct from "./routes/admin/product.route"
 import AdminOrder from "./routes/admin/order.route"
@@ -32,6 +33,7 @@ app.use("/api/client" ,ClientCart)
 app.use("/api/client" ,ClientNotification)
 app.use("/api/client" ,ClientProduct)
 app.use("/api/client" ,ClientUser)
+app.use("/api/client" ,ClientOrder)
 
 // admin
 app.use("/api/admin" ,AdminProduct)
