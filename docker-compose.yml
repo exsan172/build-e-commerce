@@ -12,9 +12,9 @@ services:
     networks :
       - e-commerce-network
     command : yarn start
-    
+
   db :
-    image : mongo:latest
+    image : mongo:4.4.18
     volumes :
       - ./data/db:/data/db
     container_name: mongoDB
