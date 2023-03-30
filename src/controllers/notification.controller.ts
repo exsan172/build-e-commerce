@@ -14,7 +14,7 @@ const notificationController =  {
     },
     getNotificationIndicator: async (req:Request, res:Response, next:NextFunction) => {
         try {
-            const notif = await notificationService.getNotification({ for_user : req.body.dataAuth.id_user })
+            const notif = await notificationService.getNotification({ for_user : req.body.dataAuth.id_user, read : false })
             return config.response(res, 200, true, "sukses mengambil data notifikasi", {
                 indicator : notif.length > 0 ? true : false
             })

@@ -2,7 +2,7 @@ import notificationModelSchema from "../models/notification.model.schema"
 
 const notificationService = {
     getNotification : async (query:object) => {
-        return notificationModelSchema.find(query)
+        return notificationModelSchema.find(query).sort({ created_at : -1 })
     },
     deletetNotification : async (id:string) => {
         return notificationModelSchema.deleteOne({ _id:id })
