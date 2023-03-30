@@ -104,14 +104,14 @@ const orderController = {
             await orderService.updateOrder(req.query.id as string, orderData)
             const latestData = await orderService.getOneOrder(req.query.id as string)
             
-            if(latestData.order_status === true) {
+            if(req.body.order_status !== undefined && latestData.order_status === true) {
                 await notificationService.createNotification({
                     message  : "Pesanan selesai, silahkan ambil di kasir",
                     for_user : latestData.created_by
                 })
             }
 
-            if(latestData.pay_status === true) {
+            if(req.body.pay_status !== undefined && latestData.pay_status === true) {
                 await notificationService.createNotification({
                     message  : "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
                     for_user : latestData.created_by
