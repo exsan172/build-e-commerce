@@ -1,4 +1,4 @@
-FROM --platform=arm64 node
+FROM --platform=arm64 node:16.14.2
 WORKDIR /e-commerce
 COPY package*.json ./
 
@@ -6,7 +6,7 @@ RUN yarn install
 
 ENV PORT=3000
 ENV ALLOW_CORS=*
-ENV DB_HOST=mongodb://127.0.0.1:27017
+ENV DB_HOST=mongodb://localhost:27017
 ENV DB_NAME=e-commerce
 ENV PRIVATE_KEY=@L0nT33J4r@n
 ENV CLOUD_NAME=exsan-dev
