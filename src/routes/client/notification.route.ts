@@ -6,6 +6,6 @@ const router = express.Router()
 
 router.get("/notification", authToken, Controllers.getNotification)
 router.get("/notification-indicator", authToken, Controllers.getNotificationIndicator)
-router.put("/notification", authToken, Controllers.getNotificationIndicator)
+router.put("/notification", authToken, Controllers.readNotif)
 
 export default router

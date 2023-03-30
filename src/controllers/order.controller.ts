@@ -3,20 +3,20 @@ import moment from "moment-timezone"
 import orderService from "../services/order.service"
 import cartService from "../services/cart.service"
 import config from "../configs/index.config"
+import notificationService from "../services/notification.service"
 
 const orderController = {
     getOrder : async (req:Request, res:Response, next:NextFunction) => {
         try {
-            const order = await orderService.getOrder({ created_by: req.body.dataAuth.id_user })
-            return config.response(res, 200, true, "sukses mengambil data order", order)
+            let filterData = {
+                created_by: req.body.dataAuth.id_user
+            }
 
-        } catch (error) {
-            return config.response(res, 400, false, error.message)
-        }
-    },
-    getOrderByStatus : async (req:Request, res:Response, next:NextFunction) => {
-        try {
-            const order = await orderService.getOrder({ created_by: req.body.dataAuth.id_user, order_status: req.query.status === "open" ? false : true })
+            if(req.query.order_status !== undefined) {
+                filterData["order_status"] = req.query.order_status
+            }
+
+            const order = await orderService.getOrder(filterData)
             return config.response(res, 200, true, "sukses mengambil data order", order)
 
         } catch (error) {
@@ -42,7 +42,12 @@ const orderController = {
                         total_price : totalPrice,
                         created_by  : req.body.dataAuth.id_user
                     })
-    
+                    
+                    await notificationService.createNotification({
+                        message  : "Order berhasil di buat, silahkan lakukan pembayaran di kasir",
+                        for_user : req.body.dataAuth.id_user
+                    })
+
                     return config.response(res, 200, true, "sukses membuat order baru", order)
                 }
 
@@ -99,6 +104,20 @@ const orderController = {
             await orderService.updateOrder(req.query.id as string, orderData)
             const latestData = await orderService.getOneOrder(req.query.id as string)
             
+            if(latestData.order_status === true) {
+                await notificationService.createNotification({
+                    message  : "Pesanan selesai, silahkan ambil di kasir",
+                    for_user : latestData.created_by
+                })
+            }
+
+            if(latestData.pay_status === true) {
+                await notificationService.createNotification({
+                    message  : "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
+                    for_user : latestData.created_by
+                })
+            }
+
             return config.response(res, 200, true, "sukses update data order", latestData)
 
         } catch (error) {

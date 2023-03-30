@@ -23,6 +23,22 @@ const notificationController =  {
             return config.response(res, 400, error.message)
         }
     },
+    readNotif : async (req:Request, res:Response, next:NextFunction) => {
+        try {
+            const findNotif = await notificationService.getNotification({ for_user : req.body.dataAuth.id_user })
+            if(findNotif === null) {
+                return config.response(res, 400, false, "data notif tidak ada sekarang")
+            }
+
+            const readAll = await notificationService.updateManyNotification({ for_user : req.body.dataAuth.id_user }, { read : true })
+            if(readAll) {
+                return config.response(res, 200, true, "sukses notif berhasil di update")
+            }
+
+        } catch (error) {
+            return config.response(res, 400, error.message)
+        }
+    }
 }
 
 export default notificationController
