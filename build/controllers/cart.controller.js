@@ -46,6 +46,10 @@ const CartController = {
     }),
     createCart: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "admin") {
+                return index_config_1.default.response(res, 400, false, "hanya user yang bisa membuat cart");
+            }
             const getProduct = yield product_service_1.default.getOneProduct(req.body.product);
             if (getProduct === null) {
                 return index_config_1.default.response(res, 400, false, "data tidak di temukan", [], [
@@ -69,6 +73,10 @@ const CartController = {
     }),
     updateCart: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "admin") {
+                return index_config_1.default.response(res, 400, false, "hanya user yang bisa mengupdate cart");
+            }
             if (req.body.qty < 1) {
                 return index_config_1.default.response(res, 400, false, "minimal qty tidak valid", [], [
                     {
@@ -100,6 +108,10 @@ const CartController = {
     }),
     deleteCart: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "admin") {
+                return index_config_1.default.response(res, 400, false, "hanya user yang bisa menghapus cart");
+            }
             const checkCart = yield cart_service_1.default.getOneCart(req.query.id);
             if (checkCart === null) {
                 return index_config_1.default.response(res, 400, false, "data tidak di temukan", [], [

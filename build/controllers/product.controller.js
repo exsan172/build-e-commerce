@@ -28,6 +28,11 @@ const ProductController = {
     }),
     createProduct: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "user") {
+                yield (0, upload_middleware_1.deleteFile)(req.body.public_id);
+                return index_config_1.default.response(res, 400, false, "hanya admin yang bisa mengubah data");
+            }
             const create = yield product_service_1.default.createProduct({
                 product_name: req.body.product_name,
                 price: req.body.price,
@@ -49,6 +54,10 @@ const ProductController = {
     }),
     deleteProduct: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "user") {
+                return index_config_1.default.response(res, 400, false, "hanya admin yang bisa mengubah data");
+            }
             const findData = yield product_service_1.default.getOneProduct(req.query.id);
             if (findData === null) {
                 return index_config_1.default.response(res, 400, false, "data produk tidak di temukan", [], [
@@ -72,6 +81,10 @@ const ProductController = {
     }),
     updateProduct: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "user") {
+                return index_config_1.default.response(res, 400, false, "hanya admin yang bisa mengubah data");
+            }
             const findData = yield product_service_1.default.getOneProduct(req.query.id);
             if (findData === null) {
                 return index_config_1.default.response(res, 400, false, "data produk tidak di temukan", [], [

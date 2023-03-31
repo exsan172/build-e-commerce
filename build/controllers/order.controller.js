@@ -40,6 +40,10 @@ const orderController = {
     }),
     createOrder: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "admin") {
+                return index_config_1.default.response(res, 400, false, "hanya user yang bisa membuat order");
+            }
             const getDataCart = yield cart_service_1.default.getCart({ created_by: req.body.dataAuth.id_user });
             if (getDataCart.length > 0) {
                 let listId = [];
@@ -101,6 +105,10 @@ const orderController = {
     }),
     updateOrder: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
+            const checkRole = req.body.dataAuth.role;
+            if (checkRole === "user") {
+                return index_config_1.default.response(res, 400, false, "hanya admin yang bisa mengubah data");
+            }
             const checkOrder = yield order_service_1.default.getOneOrder(req.query.id);
             if (checkOrder === null) {
                 return index_config_1.default.response(res, 400, false, "data order tidak di temukan", [], [
