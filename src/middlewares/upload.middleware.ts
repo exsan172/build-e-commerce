@@ -27,7 +27,13 @@ export const upload = multer({
 
 export const uploadMiddleware = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        if(req.file === undefined && req.method !== "PUT") {
+        if(req.file !== undefined) {
+            const result       = await cloudinary.uploader.upload(req.file.path, { folder : config.env.FOLDER_NAME })       
+            req.body.fileName  = result.original_filename
+            req.body.public_id = result.public_id
+            req.body.fileUrl   = result.secure_url
+
+        } else if(req.method === "POST" && req.file === undefined) {
             return config.response(res, 400, false, "images tidak valid", [], [
                 {
                     field : "images",
@@ -35,11 +41,6 @@ export const uploadMiddleware = async (req:Request, res:Response, next:NextFunct
                 }
             ])
         }
-        
-        const result       = await cloudinary.uploader.upload(req.file.path)       
-        req.body.fileName  = result.original_filename
-        req.body.public_id = result.public_id
-        req.body.fileUrl   = result.secure_url
 
         next()
     } catch (error) {
