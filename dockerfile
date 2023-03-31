@@ -15,7 +15,6 @@ ENV API_KEY=748976324489119
 ENV API_SECRET=uBAic3y44QImWkbUTJwExujFhmU
 
 COPY . .
-RUN yarn build
 
 EXPOSE 3000
 CMD ["yarn", "start"]
