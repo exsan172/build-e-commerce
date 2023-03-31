@@ -24,6 +24,16 @@ router.post("/login", [
 
 ],validationMiddleware, Controllers.login)
 
+router.post("/login-google", [
+
+    body("verification_token")
+    .notEmpty().withMessage("verification_token tidak boleh kosong"),
+
+    body("fcm_token")
+    .notEmpty().withMessage("fcm_token tidak boleh kosong")
+
+],validationMiddleware, Controllers.loginGoogle)
+
 router.post("/register", [
 
     body("name")

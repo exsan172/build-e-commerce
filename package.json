@@ -24,6 +24,7 @@
         "express-jwt": "^8.4.1",
         "express-validator": "^6.15.0",
         "firebase-admin": "^11.5.0",
+        "google-auth-library": "^8.7.0",
         "jsonwebtoken": "^9.0.0",
         "moment-timezone": "^0.5.42",
         "mongoose": "^7.0.3",

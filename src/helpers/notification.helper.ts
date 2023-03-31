@@ -31,4 +31,26 @@ const sendNotification = async (token:string, title:string, body:string) => {
     }
 }
 
+export const loginWithGoogle = async (token:string) => {
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const { name, sub } = decodedToken;
+
+        return {
+            status  : true,
+            message : {
+                name    : name, 
+                id_user : sub
+            }
+        }
+
+    } catch (error) {
+        console.log("error login google => ", error.message);
+        return {
+            status  : false,
+            message : error.message
+        }
+    }
+}
+
 export default sendNotification

@@ -3,6 +3,7 @@ import bcrypt from "bcrypt"
 import userService from "../services/user.service"
 import config from "../configs/index.config"
 import { signJwt } from "../middlewares/jwt.middleware"
+import { loginWithGoogle } from "../helpers/notification.helper"
 
 const saltRound:number = 10
 const userControllers = {
@@ -45,6 +46,35 @@ const userControllers = {
                 }
             }
             
+        } catch (error) {
+            return config.response(res, 400, false, error.message)
+        }
+    },
+    loginGoogle : async (req:Request, res:Response, next:NextFunction) => {
+        try {
+            const dataUser = await loginWithGoogle(req.body.verification_token)
+            if(dataUser.status === true) {
+                const sign = await signJwt({
+                    name        : dataUser.message.name,
+                    role        : "user",
+                    id_user     : dataUser.message.id_user,
+                    fcm_token   : req.body.fcm_token
+                })
+    
+                return config.response(res, 200, true, "sukses masuk", {
+                    token : sign,
+                    data  : {
+                        name        : dataUser.message.name,
+                        role        : "user",
+                        id_user     : dataUser.message.id_user,
+                        fcm_token   : req.body.fcm_token
+                    }
+                })
+
+            } else {
+                return config.response(res, 400, false, dataUser.message)
+            }
+
         } catch (error) {
             return config.response(res, 400, false, error.message)
         }
