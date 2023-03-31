@@ -19,6 +19,9 @@ router.post("/login", [
     .notEmpty().withMessage("password tidak boleh kosong")
     .isLength({ min : 8 }).withMessage("pasword minimal 8 karakter"),
 
+    body("fcm_token")
+    .notEmpty().withMessage("fcm_token tidak boleh kosong")
+
 ],validationMiddleware, Controllers.login)
 
 router.post("/register", [
@@ -36,7 +39,10 @@ router.post("/register", [
 
     body("role")
     .notEmpty().withMessage("role tidak boleh kosong")
-    .isIn(["admin", "user"]).withMessage("role hanya berisi admin atau user")
+    .isIn(["admin", "user"]).withMessage("role hanya berisi admin atau user"),
+
+    body("fcm_token")
+    .notEmpty().withMessage("fcm_token tidak boleh kosong")
 
 ], validationMiddleware, Controllers.register)
 

@@ -5,6 +5,7 @@ import cartService from "../services/cart.service"
 import config from "../configs/index.config"
 import notificationService from "../services/notification.service"
 import sendNotification from "../helpers/notification.helper"
+import generateQr from "../helpers/generateQr.helper"
 
 const orderController = {
     getOrder : async (req:Request, res:Response, next:NextFunction) => {
@@ -15,6 +16,10 @@ const orderController = {
 
             if(req.query.order_status !== undefined) {
                 filterData["order_status"] = req.query.order_status
+            }
+
+            if(req.query.id !== undefined) {
+                filterData["_id"] = req.query.id
             }
 
             const order = await orderService.getOrder(filterData)
@@ -52,7 +57,15 @@ const orderController = {
                         })
                     }
 
-                    return config.response(res, 200, true, "sukses membuat order baru", order)
+                    const QRGenerate = await generateQr(order._id as any)
+                    if(QRGenerate.status === true) {
+                        await orderService.updateOrder(order._id as any, {
+                            qr_code_id : QRGenerate.message
+                        })
+                    }
+
+                    const getLatestDataOrder = await orderService.getOneOrder(order._id as any)
+                    return config.response(res, 200, true, "sukses membuat order baru", getLatestDataOrder)
                 }
 
             } else {

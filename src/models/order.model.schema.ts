@@ -26,6 +26,11 @@ const orderSchema = new mongoose.Schema({
         require : true,
         default : false
     },
+    qr_code_id: {
+        type    : String,
+        require : true,
+        default : null,
+    },
     created_by: {
         type    : String,
         require : true
