@@ -21,6 +21,12 @@ router.post("/login", [
     (0, express_validator_1.body)("fcm_token")
         .notEmpty().withMessage("fcm_token tidak boleh kosong")
 ], validation_middleware_1.default, user_controller_1.default.login);
+router.post("/login-google", [
+    (0, express_validator_1.body)("verification_token")
+        .notEmpty().withMessage("verification_token tidak boleh kosong"),
+    (0, express_validator_1.body)("fcm_token")
+        .notEmpty().withMessage("fcm_token tidak boleh kosong")
+], validation_middleware_1.default, user_controller_1.default.loginGoogle);
 router.post("/register", [
     (0, express_validator_1.body)("name")
         .notEmpty().withMessage("nama tidak boleh kosong"),

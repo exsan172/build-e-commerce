@@ -16,6 +16,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const user_service_1 = __importDefault(require("../services/user.service"));
 const index_config_1 = __importDefault(require("../configs/index.config"));
 const jwt_middleware_1 = require("../middlewares/jwt.middleware");
+const notification_helper_1 = require("../helpers/notification.helper");
 const saltRound = 10;
 const userControllers = {
     login: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -51,6 +52,34 @@ const userControllers = {
                         data: latestDataUser
                     });
                 }
+            }
+        }
+        catch (error) {
+            return index_config_1.default.response(res, 400, false, error.message);
+        }
+    }),
+    loginGoogle: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const dataUser = yield (0, notification_helper_1.loginWithGoogle)(req.body.verification_token);
+            if (dataUser.status === true) {
+                const sign = yield (0, jwt_middleware_1.signJwt)({
+                    name: dataUser.message.name,
+                    role: "user",
+                    id_user: dataUser.message.id_user,
+                    fcm_token: req.body.fcm_token
+                });
+                return index_config_1.default.response(res, 200, true, "sukses masuk", {
+                    token: sign,
+                    data: {
+                        name: dataUser.message.name,
+                        role: "user",
+                        id_user: dataUser.message.id_user,
+                        fcm_token: req.body.fcm_token
+                    }
+                });
+            }
+            else {
+                return index_config_1.default.response(res, 400, false, dataUser.message);
             }
         }
         catch (error) {

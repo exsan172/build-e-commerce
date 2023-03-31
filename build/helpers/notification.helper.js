@@ -35,6 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.loginWithGoogle = void 0;
 const firebase_admin_1 = __importDefault(require("firebase-admin"));
 const firebaseConfig = __importStar(require("../configs/serviceAccountKey.json"));
 firebase_admin_1.default.initializeApp({
@@ -63,5 +64,26 @@ const sendNotification = (token, title, body) => __awaiter(void 0, void 0, void 
         };
     }
 });
+const loginWithGoogle = (token) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const decodedToken = yield firebase_admin_1.default.auth().verifyIdToken(token);
+        const { name, sub } = decodedToken;
+        return {
+            status: true,
+            message: {
+                name: name,
+                id_user: sub
+            }
+        };
+    }
+    catch (error) {
+        console.log("error login google => ", error.message);
+        return {
+            status: false,
+            message: error.message
+        };
+    }
+});
+exports.loginWithGoogle = loginWithGoogle;
 exports.default = sendNotification;
 //# sourceMappingURL=notification.helper.js.map
