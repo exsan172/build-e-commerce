@@ -24,7 +24,7 @@ const app = express()
 app.use(cors({
     origin : [config.env.ALLOW_CORS || "*"]
 }))
-app.use(loger("common"))
+app.use(loger("dev"))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
