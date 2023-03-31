@@ -27,7 +27,7 @@ export const upload = multer({
 
 export const uploadMiddleware = async (req:Request, res:Response, next:NextFunction) => {
     try {
-        if(req.file === undefined) {
+        if(req.file === undefined && req.method !== "PUT") {
             return config.response(res, 400, false, "images tidak valid", [], [
                 {
                     field : "images",
