@@ -17,6 +17,12 @@ const ProductController = {
     },
     createProduct : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "user") {
+                await deleteFile(req.body.public_id)
+                return config.response(res, 400, false, "hanya admin yang bisa mengubah data")
+            }
+
             const create = await productService.createProduct({
                 product_name    : req.body.product_name,
                 price           : req.body.price,
@@ -38,6 +44,10 @@ const ProductController = {
     },
     deleteProduct : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "user") {
+                return config.response(res, 400, false, "hanya admin yang bisa mengubah data")
+            }
 
             const findData = await productService.getOneProduct(req.query.id as string)
             if(findData === null) {
@@ -63,6 +73,11 @@ const ProductController = {
     },
     updateProduct : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "user") {
+                return config.response(res, 400, false, "hanya admin yang bisa mengubah data")
+            }
+
             const findData = await productService.getOneProduct(req.query.id as string)
             if(findData === null) {
                 return config.response(res, 400, false, "data produk tidak di temukan", [], [

@@ -6,6 +6,7 @@ import config from "../configs/index.config"
 import notificationService from "../services/notification.service"
 import sendNotification from "../helpers/notification.helper"
 import generateQr from "../helpers/generateQr.helper"
+import { deleteFile } from "../middlewares/upload.middleware"
 
 const orderController = {
     getOrder : async (req:Request, res:Response, next:NextFunction) => {
@@ -31,6 +32,11 @@ const orderController = {
     },
     createOrder : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "admin") {
+                return config.response(res, 400, false, "hanya user yang bisa membuat order")
+            }
+
             const getDataCart = await cartService.getCart({ created_by: req.body.dataAuth.id_user })
             if(getDataCart.length > 0) {
                 let listId:Array<any>     = []
@@ -96,6 +102,11 @@ const orderController = {
     },
     updateOrder : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "user") {
+                return config.response(res, 400, false, "hanya admin yang bisa mengubah data")
+            }
+
             const checkOrder = await orderService.getOneOrder(req.query.id as string)
             if(checkOrder === null) {
                 return config.response(res, 400, false, "data order tidak di temukan", [], [

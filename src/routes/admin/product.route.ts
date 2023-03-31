@@ -24,7 +24,7 @@ router.delete("/product", [
 ], authToken, validationMiddleware, Controllers.deleteProduct)
 
 
-router.put("/product", authToken, upload.single("images"), uploadMiddleware, fileError, [
+router.put("/product", upload.single("images"), uploadMiddleware, fileError, [
 
     query("id")
     .not().isEmpty().withMessage("id tidak boleh kosong"),
@@ -42,10 +42,10 @@ router.put("/product", authToken, upload.single("images"), uploadMiddleware, fil
     body("description")
     .not().isEmpty().withMessage("description tidak boleh kosong")
 
-], validationMiddleware, Controllers.updateProduct)
+], validationMiddleware, authToken, Controllers.updateProduct)
 
 
-router.post("/product", authToken, upload.single("images"), uploadMiddleware, fileError, [
+router.post("/product", upload.single("images"), uploadMiddleware, fileError, [
 
     body("product_name")
     .not().isEmpty().withMessage("product_name tidak boleh kosong"),
@@ -60,6 +60,6 @@ router.post("/product", authToken, upload.single("images"), uploadMiddleware, fi
     body("description")
     .not().isEmpty().withMessage("description tidak boleh kosong")
 
-], validationMiddleware, Controllers.createProduct)
+], validationMiddleware, authToken, Controllers.createProduct)
 
 export default router

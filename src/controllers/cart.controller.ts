@@ -35,6 +35,11 @@ const CartController = {
     },
     createCart : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "admin") {
+                return config.response(res, 400, false, "hanya user yang bisa membuat cart")
+            }
+
             const getProduct = await productService.getOneProduct(req.body.product)
             if(getProduct === null) {
                 return config.response(res, 400, false, "data tidak di temukan", [], [
@@ -59,6 +64,10 @@ const CartController = {
     },
     updateCart : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "admin") {
+                return config.response(res, 400, false, "hanya user yang bisa mengupdate cart")
+            }
 
             if(req.body.qty < 1) {
                 return config.response(res, 400, false, "minimal qty tidak valid", [], [
@@ -94,6 +103,11 @@ const CartController = {
     },
     deleteCart : async (req:Request, res:Response, next:NextFunction) => {
         try {
+            const checkRole = req.body.dataAuth.role
+            if(checkRole === "admin") {
+                return config.response(res, 400, false, "hanya user yang bisa menghapus cart")
+            }
+
             const checkCart = await cartService.getOneCart(req.query.id as string)
             if(checkCart === null) {
                 return config.response(res, 400, false, "data tidak di temukan", [], [
