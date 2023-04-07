@@ -59,6 +59,19 @@ const CartController = {
                     }
                 ]);
             }
+            const getCart = yield cart_service_1.default.getCart({ created_by: req.body.dataAuth.id_user });
+            if (getCart.length > 0) {
+                for (const i in getCart) {
+                    if (getCart[i].product._id.toString() === getProduct._id.toString()) {
+                        yield cart_service_1.default.updateCart(getCart[i]._id, {
+                            qty: getCart[i].qty + 1,
+                            total_price: getCart[i].product.price * (getCart[i].qty + 1)
+                        });
+                        const latestData = yield cart_service_1.default.getOneCart(getCart[i]._id);
+                        return index_config_1.default.response(res, 201, true, "sukses membuat data", latestData);
+                    }
+                }
+            }
             const create = yield cart_service_1.default.createCart({
                 product: getProduct,
                 qty: 1,

@@ -49,6 +49,21 @@ const CartController = {
                     }
                 ])
             }
+
+            const getCart = await cartService.getCart({ created_by : req.body.dataAuth.id_user })
+            if(getCart.length > 0) {
+                for(const i in getCart) {
+                    if(getCart[i].product._id.toString() === getProduct._id.toString()) {
+                        await cartService.updateCart(getCart[i]._id as any, {
+                            qty : getCart[i].qty+1,
+                            total_price : getCart[i].product.price*(getCart[i].qty+1)
+                        })
+
+                        const latestData = await cartService.getOneCart(getCart[i]._id as any)
+                        return config.response(res, 201, true, "sukses membuat data", latestData)
+                    }
+                }
+            }
             
             const create = await cartService.createCart({
                 product     : getProduct,
