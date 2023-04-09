@@ -20,7 +20,7 @@ const CartController = {
     getCart: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             let total = 0;
-            const cart = yield cart_service_1.default.getCart({});
+            const cart = yield cart_service_1.default.getCart({ created_by: req.body.dataAuth.id_user });
             for (const i in cart) {
                 total += cart[i].total_price;
             }
