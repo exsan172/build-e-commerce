@@ -8,7 +8,7 @@ const CartController = {
     getCart : async (req:Request, res:Response, next:NextFunction) => {
         try {
             let total = 0
-            const cart = await cartService.getCart({})
+            const cart = await cartService.getCart({ created_by : req.body.dataAuth.id_user })
 
             for(const i in cart) {
                 total += cart[i].total_price
