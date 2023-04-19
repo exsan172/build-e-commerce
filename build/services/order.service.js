@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const order_model_schema_1 = __importDefault(require("../models/order.model.schema"));
 const orderService = {
     getOrder: (query) => __awaiter(void 0, void 0, void 0, function* () {
-        return yield order_model_schema_1.default.find(query);
+        return yield order_model_schema_1.default.find(query).sort({ created_at: -1 });
     }),
     getOneOrder: (id) => __awaiter(void 0, void 0, void 0, function* () {
         return yield order_model_schema_1.default.findOne({ _id: id });

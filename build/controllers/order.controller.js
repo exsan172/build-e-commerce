@@ -19,6 +19,7 @@ const index_config_1 = __importDefault(require("../configs/index.config"));
 const notification_service_1 = __importDefault(require("../services/notification.service"));
 const notification_helper_1 = __importDefault(require("../helpers/notification.helper"));
 const generateQr_helper_1 = __importDefault(require("../helpers/generateQr.helper"));
+const user_service_1 = __importDefault(require("../services/user.service"));
 const orderController = {
     getOrder: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -32,7 +33,6 @@ const orderController = {
             if (req.query.id !== undefined) {
                 filterData["_id"] = req.query.id;
             }
-            console.log("filterData => ", filterData);
             const order = yield order_service_1.default.getOrder(filterData);
             return index_config_1.default.response(res, 200, true, "sukses mengambil data order", order);
         }
@@ -67,6 +67,11 @@ const orderController = {
                             message: "Order berhasil di buat, silahkan lakukan pembayaran di kasir",
                             for_user: req.body.dataAuth.id_user
                         });
+                    }
+                    // notif to admin
+                    const getAdminAccout = yield user_service_1.default.getUserAllWithFilter({ role: "admin" });
+                    for (const l in getAdminAccout) {
+                        yield (0, notification_helper_1.default)(getAdminAccout[l].fcm_token, "Order baru tersedia", "Order baru di buat, silahkan konfirmasi pemesanan");
                     }
                     const QRGenerate = yield (0, generateQr_helper_1.default)(order._id);
                     if (QRGenerate.status === true) {
@@ -131,22 +136,26 @@ const orderController = {
             }
             yield order_service_1.default.updateOrder(req.query.id, orderData);
             const latestData = yield order_service_1.default.getOneOrder(req.query.id);
-            if (req.body.order_status !== undefined && latestData.order_status === true) {
-                const sendNotif = yield (0, notification_helper_1.default)(req.body.dataAuth.fcm_token, "Pesanan selesai", "Pesanan selesai, silahkan ambil di kasir");
-                if (sendNotif.status === true) {
-                    yield notification_service_1.default.createNotification({
-                        message: "Pesanan selesai, silahkan ambil di kasir",
-                        for_user: latestData.created_by
-                    });
+            // get role user
+            const userRole = yield user_service_1.default.getOne({ _id: latestData.created_by });
+            if (userRole !== null) {
+                if (req.body.order_status !== undefined && latestData.order_status === true) {
+                    const sendNotif = yield (0, notification_helper_1.default)(userRole.fcm_token, "Pesanan selesai", "Pesanan selesai, silahkan ambil di kasir");
+                    if (sendNotif.status === true) {
+                        yield notification_service_1.default.createNotification({
+                            message: "Pesanan selesai, silahkan ambil di kasir",
+                            for_user: latestData.created_by
+                        });
+                    }
                 }
-            }
-            if (req.body.pay_status !== undefined && latestData.pay_status === true) {
-                const sendNotif = yield (0, notification_helper_1.default)(req.body.dataAuth.fcm_token, "Pembayaran di konfirmasi", "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda");
-                if (sendNotif.status === true) {
-                    yield notification_service_1.default.createNotification({
-                        message: "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
-                        for_user: latestData.created_by
-                    });
+                if (req.body.pay_status !== undefined && latestData.pay_status === true) {
+                    const sendNotif = yield (0, notification_helper_1.default)(userRole.fcm_token, "Pembayaran di konfirmasi", "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda");
+                    if (sendNotif.status === true) {
+                        yield notification_service_1.default.createNotification({
+                            message: "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
+                            for_user: latestData.created_by
+                        });
+                    }
                 }
             }
             return index_config_1.default.response(res, 200, true, "sukses update data order", latestData);

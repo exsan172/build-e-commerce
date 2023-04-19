@@ -17,6 +17,9 @@ const userService = {
     getUser: () => __awaiter(void 0, void 0, void 0, function* () {
         return yield user_model_schema_1.default.find({});
     }),
+    getUserAllWithFilter: (filter) => __awaiter(void 0, void 0, void 0, function* () {
+        return yield user_model_schema_1.default.find(filter);
+    }),
     getOne: (query) => __awaiter(void 0, void 0, void 0, function* () {
         return yield user_model_schema_1.default.findOne(query);
     }),
