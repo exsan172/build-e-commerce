@@ -4,6 +4,9 @@ const userService = {
     getUser : async () => {
         return await userModelSchema.find({})
     },
+    getUserAllWithFilter : async (filter:any) => {
+        return await userModelSchema.find(filter)
+    },
     getOne : async (query:object) => {
         return await userModelSchema.findOne(query)
     },

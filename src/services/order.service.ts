@@ -2,7 +2,7 @@ import orderModelSchema from "../models/order.model.schema"
 
 const orderService = {
     getOrder : async (query:object) => {
-        return await orderModelSchema.find(query)
+        return await orderModelSchema.find(query).sort({ created_at: -1 })
     },
     getOneOrder : async (id:string) => {
         return await orderModelSchema.findOne({ _id:id })

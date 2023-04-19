@@ -6,6 +6,7 @@ import config from "../configs/index.config"
 import notificationService from "../services/notification.service"
 import sendNotification from "../helpers/notification.helper"
 import generateQr from "../helpers/generateQr.helper"
+import userService from "../services/user.service"
 
 const orderController = {
     getOrder : async (req:Request, res:Response, next:NextFunction) => {
@@ -24,8 +25,6 @@ const orderController = {
             if(req.query.id !== undefined) {
                 filterData["_id"] = req.query.id
             }
-
-            console.log("filterData => ", filterData);
             
             const order = await orderService.getOrder(filterData)
             return config.response(res, 200, true, "sukses mengambil data order", order)
@@ -67,6 +66,12 @@ const orderController = {
                         })
                     }
 
+                    // notif to admin
+                    const getAdminAccout = await userService.getUserAllWithFilter({ role : "admin" })
+                    for(const l in getAdminAccout) {
+                        await sendNotification(getAdminAccout[l].fcm_token, "Order baru tersedia", "Order baru di buat, silahkan konfirmasi pemesanan")
+                    }
+                    
                     const QRGenerate = await generateQr(order._id as any)
                     if(QRGenerate.status === true) {
                         await orderService.updateOrder(order._id as any, {
@@ -136,23 +141,27 @@ const orderController = {
             await orderService.updateOrder(req.query.id as string, orderData)
             const latestData = await orderService.getOneOrder(req.query.id as string)
             
-            if(req.body.order_status !== undefined && latestData.order_status === true) {
-                const sendNotif = await sendNotification(req.body.dataAuth.fcm_token, "Pesanan selesai", "Pesanan selesai, silahkan ambil di kasir")
-                if(sendNotif.status === true) {
-                    await notificationService.createNotification({
-                        message  : "Pesanan selesai, silahkan ambil di kasir",
-                        for_user : latestData.created_by
-                    })
+            // get role user
+            const userRole = await userService.getOne({_id : latestData.created_by})
+            if(userRole !== null) {
+                if(req.body.order_status !== undefined && latestData.order_status === true) {
+                    const sendNotif = await sendNotification(userRole.fcm_token, "Pesanan selesai", "Pesanan selesai, silahkan ambil di kasir")
+                    if(sendNotif.status === true) {
+                        await notificationService.createNotification({
+                            message  : "Pesanan selesai, silahkan ambil di kasir",
+                            for_user : latestData.created_by
+                        })
+                    }
                 }
-            }
-
-            if(req.body.pay_status !== undefined && latestData.pay_status === true) {
-                const sendNotif = await sendNotification(req.body.dataAuth.fcm_token, "Pembayaran di konfirmasi", "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda")
-                if(sendNotif.status === true) {
-                    await notificationService.createNotification({
-                        message  : "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
-                        for_user : latestData.created_by
-                    })
+    
+                if(req.body.pay_status !== undefined && latestData.pay_status === true) {
+                    const sendNotif = await sendNotification(userRole.fcm_token, "Pembayaran di konfirmasi", "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda")
+                    if(sendNotif.status === true) {
+                        await notificationService.createNotification({
+                            message  : "Pembayaran dikonfirmasi, silahkan menunggu pesanan anda",
+                            for_user : latestData.created_by
+                        })
+                    }
                 }
             }
 
