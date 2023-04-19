@@ -52,6 +52,14 @@ const userControllers = {
                         data: latestDataUser
                     });
                 }
+                else {
+                    return index_config_1.default.response(res, 400, false, "password salah", [], [
+                        {
+                            field: "password",
+                            message: "password salah"
+                        }
+                    ]);
+                }
             }
         }
         catch (error) {
