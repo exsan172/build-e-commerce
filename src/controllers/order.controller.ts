@@ -6,13 +6,15 @@ import config from "../configs/index.config"
 import notificationService from "../services/notification.service"
 import sendNotification from "../helpers/notification.helper"
 import generateQr from "../helpers/generateQr.helper"
-import { deleteFile } from "../middlewares/upload.middleware"
 
 const orderController = {
     getOrder : async (req:Request, res:Response, next:NextFunction) => {
         try {
-            let filterData = {
-                created_by: req.body.dataAuth.id_user
+            
+            let filterData = {}
+
+            if(req.query.is_admin === undefined && req.query.is_admin !== "true") {
+                filterData["created_by"] = req.body.dataAuth.id_user
             }
 
             if(req.query.order_status !== undefined) {
@@ -23,6 +25,8 @@ const orderController = {
                 filterData["_id"] = req.query.id
             }
 
+            console.log("filterData => ", filterData);
+            
             const order = await orderService.getOrder(filterData)
             return config.response(res, 200, true, "sukses mengambil data order", order)
 
