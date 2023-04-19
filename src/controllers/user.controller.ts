@@ -10,6 +10,7 @@ const userControllers = {
     login : async (req:Request, res:Response, next:NextFunction) => {
         try {
             const findEmail = await userService.getOne({ email : req.body.email })
+            
             if(findEmail === null) {
                 return config.response(res, 400, false, "email tidak di temukan", [], [
                     {
@@ -17,7 +18,7 @@ const userControllers = {
                         message : "email tidak di temukan"
                     }
                 ])
-
+                
             } else {
                 const comparePassword = bcrypt.compareSync(req.body.password, findEmail.password)
                 if(comparePassword) {
@@ -43,6 +44,13 @@ const userControllers = {
                         data  : latestDataUser
                     })
 
+                } else {
+                    return config.response(res, 400, false, "password salah", [], [
+                        {
+                            field   : "password",
+                            message : "password salah"
+                        }
+                    ])
                 }
             }
             
