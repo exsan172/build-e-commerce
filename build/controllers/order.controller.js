@@ -22,15 +22,17 @@ const generateQr_helper_1 = __importDefault(require("../helpers/generateQr.helpe
 const orderController = {
     getOrder: (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            let filterData = {
-                created_by: req.body.dataAuth.id_user
-            };
+            let filterData = {};
+            if (req.query.is_admin === undefined && req.query.is_admin !== "true") {
+                filterData["created_by"] = req.body.dataAuth.id_user;
+            }
             if (req.query.order_status !== undefined) {
                 filterData["order_status"] = req.query.order_status;
             }
             if (req.query.id !== undefined) {
                 filterData["_id"] = req.query.id;
             }
+            console.log("filterData => ", filterData);
             const order = yield order_service_1.default.getOrder(filterData);
             return index_config_1.default.response(res, 200, true, "sukses mengambil data order", order);
         }
