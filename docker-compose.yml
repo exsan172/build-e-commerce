@@ -25,6 +25,11 @@ services:
 
 volumes:
   mongo_data:
+    driver : local
+    driver_opts:
+      type: none
+      device: /home/vps-client-002/mongo-data
+      o: bind
 
 networks:
   e-commerce-network:
