@@ -18,6 +18,9 @@ services:
     volumes :
       - mongo_data:/data/db
     container_name: mongoDB
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: r3H@tC4fe
+      MONGO_INITDB_ROOT_PASSWORD: k!5eM@rB490Ng
     ports :
       - "27017:27017"
     networks :
