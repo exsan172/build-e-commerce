@@ -21,6 +21,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: r3H@tC4fe
       MONGO_INITDB_ROOT_PASSWORD: k!5eM@rB490Ng
+    command: mongod --bind_ip 0.0.0.0
     ports :
       - "27017:27017"
     networks :
