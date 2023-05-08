@@ -6,7 +6,7 @@ RUN yarn install
 
 ENV PORT=3000
 ENV ALLOW_CORS=*
-ENV DB_HOST=mongodb://rehatCafe:kisemar1968@mongoDB:27017
+ENV DB_HOST=mongodb://rehatCafe:6hJx6mUXjXHMnuDS@ac-jm2r8om-shard-00-00.mxjmjvp.mongodb.net:27017,ac-jm2r8om-shard-00-01.mxjmjvp.mongodb.net:27017,ac-jm2r8om-shard-00-02.mxjmjvp.mongodb.net:27017/?ssl=true&replicaSet=atlas-12dz6m-shard-0&authSource=admin&retryWrites=true&w=majority
 ENV DB_NAME=e-commerce
 ENV PRIVATE_KEY=@L0nT33J4r@n
 ENV CLOUD_NAME=exsan-dev

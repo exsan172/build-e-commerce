@@ -7,37 +7,6 @@ services:
     ports :
       - "3040:3000"
     container_name: e-commerce
-    depends_on :
-      - db
-    networks :
-      - e-commerce-network
     command : yarn start
-
-  db :
-    image : mongo:4.4.18
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: rehatCafe
-      MONGO_INITDB_ROOT_PASSWORD: kisemar1968
-    volumes :
-      - mongo_data:/data/db
-    container_name: mongoDB
-    command: mongod --bind_ip_all --auth
-    ports :
-      - "27017:27017"
-    networks :
-      - e-commerce-network
-
-volumes:
-  mongo_data:
-    driver : local
-    driver_opts:
-      type: none
-      device: /home/vps-client-002/mongo-data
-      o: bind
-
-networks:
-  e-commerce-network:
-    driver : bridge
     
   
