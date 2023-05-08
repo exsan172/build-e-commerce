@@ -19,8 +19,8 @@ services:
       - mongo_data:/data/db
     container_name: mongoDB
     environment:
-      MONGO_INITDB_ROOT_USERNAME: r3H4tC4fe
-      MONGO_INITDB_ROOT_PASSWORD: k15eM4rB490Ng
+      MONGO_INITDB_ROOT_USERNAME: rehat
+      MONGO_INITDB_ROOT_PASSWORD: kisemar288
     command: mongod --bind_ip 0.0.0.0
     ports :
       - "27017:27017"
