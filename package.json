@@ -5,9 +5,7 @@
     "main": "main.js",
     "bin": "./bin/cli.js",
     "scripts": {
-        "start": "node ./build/main.js",
-        "dev": "nodemon --exec ts-node src/main.ts",
-        "build": "tsc",
+        "start": "node main.js",
         "prettier": "npx prettier --write ."
     },
     "author": "exsan renaldhi",
